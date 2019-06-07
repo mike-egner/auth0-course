@@ -45,7 +45,6 @@ app.get("/private", checkJwt, function(req, res) {
 });
 
 app.get("/course", checkJwt, checkScope(["read:courses"]), function(req, res) {
-  console.log("Request received.");
   res.json({
     courses: [
       { id: 1, name: "Basic Financial Modelling for Early-Stage Start-ups" },
