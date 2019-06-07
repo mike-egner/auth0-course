@@ -17,7 +17,8 @@
   },
   "proxy": "http://localhost:3001",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "run-p start:dev start:server",
+    "start:dev": "react-scripts start",
     "start:server": "node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",

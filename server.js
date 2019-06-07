@@ -26,6 +26,18 @@ const checkJwt = jwt({
   algorithms: ["RS256"]
 });
 
+function checkRole(role) {
+  // syntax required for Express middleware
+  return function(req, res, next) {
+    const assignedRoles = req.user["http://localhost:3000/roles"];
+    if (Array.isArray(assignedRoles) && assignedRoles.includes(role)) {
+      return next();
+    } else {
+      return res.status(401).send("Insufficient role.");
+    }
+  };
+}
+
 app.get("/private", checkJwt, function(req, res) {
   res.json({
     message: "Hello from a private API!"
@@ -39,6 +51,12 @@ app.get("/course", checkJwt, checkScope(["read:courses"]), function(req, res) {
       { id: 1, name: "Basic Financial Modelling for Early-Stage Start-ups" },
       { id: 2, name: "Advanced Financial Modelling for Growth-Stage Start-ups" }
     ]
+  });
+});
+
+app.get("/admin", checkJwt, checkRole("admin"), function(req, res) {
+  res.json({
+    message: "Hello from an admin API!"
   });
 });
 
