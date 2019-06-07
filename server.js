@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
+const checkScope = require("express-jwt-authz");
 
 const app = express();
 
@@ -28,6 +29,16 @@ const checkJwt = jwt({
 app.get("/private", checkJwt, function(req, res) {
   res.json({
     message: "Hello from a private API!"
+  });
+});
+
+app.get("/course", checkJwt, checkScope(["read:courses"]), function(req, res) {
+  console.log("Request received.");
+  res.json({
+    courses: [
+      { id: 1, name: "Basic Financial Modelling for Early-Stage Start-ups" },
+      { id: 2, name: "Advanced Financial Modelling for Growth-Stage Start-ups" }
+    ]
   });
 });
 
